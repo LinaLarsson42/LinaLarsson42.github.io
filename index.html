@@ -204,6 +204,16 @@ footer .logo { font-size: 20px; color: var(--ink); }
 footer nav { display: flex; gap: 22px; }
 footer a:hover { color: var(--ink); }
 
+/* Video-Dialog: lädt das Video erst beim Klick */
+.vid { border: 0; padding: 0; background: #0B0B0C; color: #fff; border-radius: 24px; overflow: hidden; width: min(960px, 100% - 24px); max-height: calc(100dvh - 24px); margin: auto; }
+.vid::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(6px); }
+.vid[data-ratio="portrait"] { width: min(420px, 100% - 24px); }
+.vid video { display: block; width: 100%; max-height: calc(100dvh - 24px); background: #000; }
+.vid[data-ratio="wide"] video { aspect-ratio: 16 / 9; }
+.vid[data-ratio="portrait"] video { aspect-ratio: 9 / 16; }
+.vid-close { position: absolute; top: 10px; right: 10px; z-index: 2; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(0,0,0,.55); color: #fff; font-size: 26px; line-height: 1; cursor: pointer; }
+.vid-close:hover { background: rgba(0,0,0,.8); }
+
 /* Einblenden */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
 .reveal.in { opacity: 1; transform: none; }
@@ -274,6 +284,7 @@ footer a:hover { color: var(--ink); }
         <div class="ctas">
           <a class="btn btn-solid" href="https://github.com/LinaLarsson42/nestio-releases/releases/latest/download/Nestio.apk">Für Android laden</a>
           <a class="btn btn-ghost" href="https://github.com/LinaLarsson42/nestio-releases/releases">Alle Downloads</a>
+          <button class="btn btn-ghost" type="button" data-video="assets/video/nestio.mp4" data-ratio="portrait" data-title="Nestio in 15 Sekunden"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Video</button>
         </div>
       </div>
       <div class="b-visual">
@@ -295,6 +306,7 @@ footer a:hover { color: var(--ink); }
         <div class="ctas">
           <a class="btn btn-solid" href="https://linalarsson42.github.io/zeitfuchs-releases/">Zur Website</a>
           <a class="btn btn-ghost" href="https://github.com/LinaLarsson42/zeitfuchs-releases/releases">Alle Downloads</a>
+          <button class="btn btn-ghost" type="button" data-video="assets/video/zeitfuchs.mp4" data-ratio="wide" data-title="Zeitfuchs in 20 Sekunden"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Video</button>
         </div>
       </div>
       <div class="b-visual">
@@ -332,6 +344,7 @@ footer a:hover { color: var(--ink); }
         <p class="b-lead">Ordner kopieren, JAR aus dem ZIP holen, Startskripte anpassen, alles packen. Einmal zusammenklicken, danach reicht ein Klick. Der Probelauf zeigt vorher, was passieren würde.</p>
         <div class="ctas">
           <a class="btn btn-solid" href="https://github.com/LinaLarsson42/releasebuilder-releases/releases">Download</a>
+          <button class="btn btn-ghost" type="button" data-video="assets/video/releasebuilder.mp4" data-ratio="wide" data-title="ReleaseBuilder in 15 Sekunden"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>Video</button>
         </div>
       </div>
       <div class="b-visual">
@@ -421,6 +434,11 @@ footer a:hover { color: var(--ink); }
   </div>
 </footer>
 
+<dialog class="vid" id="vid" aria-label="Video">
+  <button class="vid-close" type="button" id="vidClose" aria-label="Video schließen">&times;</button>
+  <video id="vidPlayer" controls playsinline preload="none"></video>
+</dialog>
+
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -450,6 +468,21 @@ footer a:hover { color: var(--ink); }
   } else {
     items.forEach(function (el) { el.classList.add("in"); });
   }
+
+  var vid = document.getElementById("vid"), player = document.getElementById("vidPlayer");
+  function closeVideo() { if (vid.open) vid.close(); }
+  document.querySelectorAll("[data-video]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      vid.dataset.ratio = b.dataset.ratio;
+      vid.setAttribute("aria-label", b.dataset.title);
+      player.src = b.dataset.video;
+      if (vid.showModal) vid.showModal(); else vid.setAttribute("open", "");
+      var p = player.play(); if (p && p.catch) p.catch(function () {});
+    });
+  });
+  document.getElementById("vidClose").addEventListener("click", closeVideo);
+  vid.addEventListener("click", function (e) { if (e.target === vid) closeVideo(); });
+  vid.addEventListener("close", function () { player.pause(); player.removeAttribute("src"); player.load(); });
 </script>
 </body>
 </html>
