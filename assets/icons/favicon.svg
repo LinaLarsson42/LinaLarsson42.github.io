@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .bg { fill: #141416; } .fg { fill: #fff; } .dot { fill: #8E8E95; }
+    @media (prefers-color-scheme: dark) { .bg { fill: #F4F4F5; } .fg { fill: #141416; } }
+  </style>
+  <rect class="bg" width="64" height="64" rx="15"/>
+  <rect class="fg" x="19" y="12" width="8" height="36" rx="4"/>
+  <rect class="fg" x="11" y="23" width="24" height="8" rx="4"/>
+  <path class="fg" d="M23 40h8a4 4 0 0 1 0 8h-8z"/>
+  <circle class="dot" cx="43" cy="44" r="5"/>
+</svg>
