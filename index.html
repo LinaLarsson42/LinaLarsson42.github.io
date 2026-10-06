@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Theresa Nagel – Apps für den Alltag</title>
+<meta name="description" content="Theresa Nagel baut Apps für Android und Windows: Nestio, Zeitfuchs, Leibgericht, ReleaseBuilder und mehr. Ohne Abo, ohne Werbung.">
+<meta name="theme-color" content="#F4F4F5">
+<link rel="icon" href="assets/icons/leibgericht.png">
+<style>
+/* Portfolio. Eine Datei, keine externen Anfragen: Outfit liegt lokal (SIL OFL 1.1).
+   Projekte stehen als Blöcke im HTML; neue Projekte = Block kopieren und Icon in assets/icons/ legen. */
+@font-face { font-family: "Outfit"; src: url("assets/fonts/Outfit-Variable.ttf") format("truetype"); font-weight: 100 900; font-display: swap; }
+
+:root {
+  --bg: #F4F4F5; --surface: #FFFFFF; --line: #E6E6E9;
+  --ink: #141416; --ink2: #4B4B52; --muted: #8E8E95;
+  --inv-bg: #141416; --inv-ink: #FFFFFF; --inv-muted: #A1A1A8; --inv-line: #2A2A2F; --inv-surface: #1E1E22;
+  --nestio: #2D6A4F; --zeitfuchs: #3F7BE0; --leib: #C4553B; --rb: #7C5CE6; --piece: #2F6A72; --immo: #4A6B7C;
+  --shadow: 0 1px 2px rgba(20,20,22,.04), 0 12px 32px -12px rgba(20,20,22,.10);
+  --wrap: 1200px; --r: 36px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0B0C; --surface: #161618; --line: #26262A;
+    --ink: #F4F4F5; --ink2: #C4C4CA; --muted: #85858C;
+    --inv-bg: #F4F4F5; --inv-ink: #141416; --inv-muted: #6E6E75; --inv-line: #DCDCE0; --inv-surface: #FFFFFF;
+    --nestio: #5CBF90; --zeitfuchs: #6FA4FA; --leib: #E8907A; --rb: #A08BF5; --piece: #6FB3BC; --immo: #8FB3C4;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px -12px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0B0C; --surface: #161618; --line: #26262A;
+  --ink: #F4F4F5; --ink2: #C4C4CA; --muted: #85858C;
+  --inv-bg: #F4F4F5; --inv-ink: #141416; --inv-muted: #6E6E75; --inv-line: #DCDCE0; --inv-surface: #FFFFFF;
+  --nestio: #5CBF90; --zeitfuchs: #6FA4FA; --leib: #E8907A; --rb: #A08BF5; --piece: #6FB3BC; --immo: #8FB3C4;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px -12px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 110px; -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--ink); font: 400 18px/1.55 "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+::selection { background: var(--ink); color: var(--bg); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 10px; }
+.wrap { width: min(var(--wrap), 100% - 32px); margin: 0 auto; }
+.skip { position: absolute; left: -9999px; top: 8px; background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 10px; z-index: 200; }
+.skip:focus { left: 16px; }
+
+h1, h2, h3 { font-weight: 600; letter-spacing: -.055em; line-height: .95; }
+.gray { color: var(--muted); }
+.dot-c { color: var(--c, var(--muted)); }
+
+/* Navigation: schwebende Karte mit Menü */
+.nav { position: fixed; z-index: 100; top: 16px; left: 0; right: 0; }
+.nav-card { position: relative; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line); border-radius: 28px; box-shadow: var(--shadow); }
+.nav-bar { display: flex; align-items: center; justify-content: space-between; height: 72px; padding: 0 22px 0 28px; }
+.logo { font-size: 26px; font-weight: 700; letter-spacing: -.06em; white-space: nowrap; }
+.menu-btn { display: flex; align-items: center; gap: 14px; background: none; border: 0; cursor: pointer; font-size: 19px; padding: 10px 6px; }
+.menu-btn .bars { width: 20px; height: 14px; position: relative; }
+.menu-btn .bars i { position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px; background: currentColor; transition: transform .3s, opacity .2s, top .3s; }
+.menu-btn .bars i:nth-child(1) { top: 0; } .menu-btn .bars i:nth-child(2) { top: 6px; } .menu-btn .bars i:nth-child(3) { top: 12px; }
+.nav.open .bars i:nth-child(1) { top: 6px; transform: rotate(45deg); }
+.nav.open .bars i:nth-child(2) { opacity: 0; }
+.nav.open .bars i:nth-child(3) { top: 6px; transform: rotate(-45deg); }
+.menu { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+.nav.open .menu { grid-template-rows: 1fr; }
+.menu > div { overflow: hidden; }
+.menu nav { padding: 4px 28px 26px; display: grid; gap: 2px; }
+.menu nav a { font-size: clamp(28px, 4vw, 40px); font-weight: 600; letter-spacing: -.05em; padding: 6px 0; color: var(--ink); transition: color .15s; }
+.menu nav a:hover { color: var(--muted); }
+.menu .theme { margin: 0 28px 24px; display: inline-flex; align-items: center; gap: 10px; font-size: 16px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 9px 16px; cursor: pointer; }
+.menu .theme svg { width: 16px; height: 16px; }
+
+/* Hero */
+.hero { padding: 200px 0 64px; text-align: center; }
+.hero .kicker { font-size: 18px; color: var(--ink2); }
+.hero h1 { margin: 26px auto 0; font-size: clamp(56px, 10.5vw, 148px); max-width: 11ch; }
+.hero .lead { margin: 34px auto 0; max-width: 640px; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.45; color: var(--muted); font-weight: 400; }
+.hero .lead b { color: var(--ink2); font-weight: 400; }
+
+/* App-Leiste */
+.apps { margin: 56px auto 0; max-width: 920px; background: var(--surface); border: 1px solid var(--line); border-radius: 32px; padding: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; text-align: left; }
+.app { display: flex; align-items: center; gap: 16px; padding: 12px 14px; border-radius: 22px; font-size: 19px; transition: background .15s; }
+.app:hover { background: var(--bg); }
+.app img { width: 52px; height: 52px; border-radius: 14px; flex: none; object-fit: contain; outline: 1px solid var(--line); outline-offset: -1px; }
+.app img.pad { padding: 5px; background: #F1F7F3; }
+.app span { min-width: 0; hyphens: manual; }
+.app small { display: block; font-size: 14px; color: var(--muted); line-height: 1.2; }
+@media (max-width: 820px) { .apps { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .apps { padding: 10px; } .app { gap: 10px; padding: 10px 8px; font-size: 15.5px; letter-spacing: -.01em; } .app img { width: 42px; height: 42px; border-radius: 12px; } .app small { display: none; } }
+
+/* Projektblöcke */
+.blocks { display: grid; gap: 20px; padding: 40px 0 0; }
+.block { --c: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 640px; }
+.block.inv { background: var(--inv-bg); color: var(--inv-ink); border-color: var(--inv-bg); }
+.block.inv .b-lead, .block.inv .b-meta { color: var(--inv-muted); }
+.block.inv .chip { border-color: var(--inv-line); color: var(--inv-muted); }
+.block.inv .btn-ghost { border-color: var(--inv-line); }
+.block.inv .btn-ghost:hover { border-color: var(--inv-ink); }
+.block.inv .btn-solid { background: var(--inv-ink); color: var(--inv-bg); }
+.block.flip .b-text { order: 2; }
+.b-text { padding: clamp(36px, 5.5vw, 76px); display: flex; flex-direction: column; justify-content: center; }
+.b-meta { display: flex; align-items: center; gap: 12px; font-size: 16px; color: var(--muted); }
+.b-meta img { width: 40px; height: 40px; border-radius: 11px; object-fit: contain; }
+.b-meta img.pad { padding: 4px; background: #F1F7F3; }
+.b-meta .live { display: inline-flex; align-items: center; gap: 7px; }
+.b-meta .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #2FB36B; }
+.b-meta .beta::before { background: #E9A23B; }
+.block h2 { margin-top: 28px; font-size: clamp(60px, 8vw, 112px); }
+.b-lead { margin-top: 26px; font-size: clamp(20px, 2vw, 26px); line-height: 1.4; color: var(--muted); max-width: 22ch; }
+.b-lead + .b-lead { margin-top: 14px; font-size: 18px; max-width: 40ch; }
+.chips { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 15px; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink2); }
+.ctas { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 58px; padding: 0 28px; border-radius: 999px; font-size: 18px; font-weight: 500; border: 1px solid var(--line); transition: transform .15s, border-color .15s, opacity .15s; }
+.btn:hover { transform: translateY(-2px); }
+.btn-solid { background: var(--ink); color: var(--bg); border-color: transparent; }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn svg { width: 18px; height: 18px; }
+
+.b-visual { position: relative; overflow: hidden; min-height: 460px;
+  background: radial-gradient(90% 70% at 50% 100%, color-mix(in srgb, var(--c) 34%, transparent), transparent 70%), color-mix(in srgb, var(--c) 7%, transparent); }
+.block.inv .b-visual { background: radial-gradient(90% 70% at 50% 100%, color-mix(in srgb, var(--c) 45%, transparent), transparent 70%), var(--inv-surface); }
+.phones { position: absolute; inset: 0; display: flex; justify-content: center; align-items: flex-start; gap: 16px; padding-top: 64px; }
+.phone { width: clamp(140px, 14.5vw, 205px); flex: none; border-radius: 30px; padding: 7px; background: #0E0E10; box-shadow: 0 40px 70px -24px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.08); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.phone img { border-radius: 24px; }
+.phone:nth-child(1) { transform: translateY(56px) rotate(-5deg); }
+.phone:nth-child(3) { transform: translateY(56px) rotate(5deg); }
+.block:hover .phone:nth-child(1) { transform: translateY(40px) rotate(-7deg) translateX(-6px); }
+.block:hover .phone:nth-child(2) { transform: translateY(-10px); }
+.block:hover .phone:nth-child(3) { transform: translateY(40px) rotate(7deg) translateX(6px); }
+.desk { position: absolute; border-radius: 14px; overflow: hidden; box-shadow: 0 40px 80px -24px rgba(0,0,0,.55), 0 0 0 1px rgba(127,127,127,.18); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.desk.a { width: 128%; left: 10%; top: 72px; }
+.desk.b { width: 40%; left: 6%; bottom: 7%; border-radius: 12px; }
+.block:hover .desk.a { transform: translateX(-14px); }
+.block:hover .desk.b { transform: translateY(-10px) scale(1.03); }
+
+/* ReleaseBuilder-Platzhalter: gezeichnetes Fenster */
+.mock { position: absolute; left: 10%; right: -10%; top: 72px; bottom: -12px; border-radius: 14px 0 0 0; background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); box-shadow: 0 40px 80px -24px rgba(0,0,0,.4); overflow: hidden; display: flex; flex-direction: column; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.block:hover .mock { transform: translateX(-14px); }
+.mock-bar { height: 40px; flex: none; display: flex; align-items: center; gap: 7px; padding: 0 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.mock-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+.mock-bar span { margin-left: 10px; }
+.mock-body { flex: 1; display: grid; grid-template-columns: 32% 1fr; min-height: 0; }
+.mock-side { border-right: 1px solid var(--line); padding: 14px; display: grid; gap: 8px; align-content: start; }
+.mock-side div { height: 34px; border-radius: 10px; background: var(--bg); font-size: 13px; display: flex; align-items: center; padding: 0 12px; color: var(--muted); white-space: nowrap; overflow: hidden; }
+.mock-side div.on { background: color-mix(in srgb, var(--c) 15%, transparent); color: var(--c); font-weight: 600; }
+.mock-main { padding: 14px; display: grid; gap: 8px; align-content: start; }
+.step { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); font-size: 14px; color: var(--ink2); white-space: nowrap; overflow: hidden; }
+.step b { width: 24px; height: 24px; flex: none; border-radius: 7px; display: grid; place-items: center; font-size: 12px; background: color-mix(in srgb, var(--c) 15%, transparent); color: var(--c); }
+.step em { margin-left: auto; padding-left: 10px; font-style: normal; font-size: 13px; color: #2FB36B; }
+.mock-note { position: absolute; left: 16px; bottom: 16px; z-index: 2; font-size: 13px; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); padding: 6px 12px; border-radius: 999px; }
+
+@media (max-width: 900px) {
+  .block { grid-template-columns: 1fr; min-height: 0; }
+  .block.flip .b-text { order: 0; }
+  .b-visual { min-height: 440px; }
+  .desk.a { width: 120%; left: 8%; top: 48px; }
+  .mock { top: 48px; }
+}
+@media (max-width: 480px) {
+  :root { --r: 30px; }
+  .b-text { padding: 36px 26px 40px; }
+  .b-visual { min-height: 360px; }
+  .phones { gap: 10px; padding-top: 40px; }
+  .phone { width: 130px; border-radius: 24px; padding: 5px; }
+  .phone img { border-radius: 19px; }
+  .btn { min-height: 54px; padding: 0 24px; font-size: 17px; }
+}
+
+/* Abschnitte */
+.section { padding: clamp(96px, 12vw, 160px) 0 0; }
+.s-head { text-align: center; margin-bottom: 48px; }
+.s-head h2 { font-size: clamp(48px, 7vw, 96px); }
+.s-head p { margin: 20px auto 0; max-width: 520px; font-size: clamp(19px, 1.8vw, 22px); color: var(--muted); }
+
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+.card { --c: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 30px; padding: clamp(28px, 3.4vw, 44px); display: flex; flex-direction: column; }
+.card .c-icon { width: 64px; height: 64px; border-radius: 17px; }
+.card h3 { margin-top: 28px; font-size: clamp(36px, 4vw, 52px); }
+.card p { margin-top: 16px; color: var(--muted); font-size: 18px; }
+.card .chips { margin-top: auto; padding-top: 26px; }
+.card .n { font-size: 52px; font-weight: 600; letter-spacing: -.05em; line-height: 1; color: var(--c); }
+.card.small h3 { margin-top: 22px; font-size: clamp(26px, 2.6vw, 32px); letter-spacing: -.04em; line-height: 1.05; }
+@media (max-width: 900px) { .cards, .cards.three { grid-template-columns: 1fr; } }
+
+/* Über mich */
+.about { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: clamp(40px, 7vw, 100px); }
+.about p.big { font-size: clamp(28px, 3.8vw, 52px); line-height: 1.12; letter-spacing: -.04em; font-weight: 500; max-width: 24ch; }
+.about p.big span { color: var(--muted); }
+.stack { margin-top: clamp(40px, 5vw, 64px); display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1px solid var(--line); padding-top: 28px; }
+.stack b { display: block; font-weight: 500; }
+.stack span { color: var(--muted); font-size: 16px; }
+@media (max-width: 820px) { .stack { grid-template-columns: 1fr 1fr; } }
+
+/* Kontakt */
+.contact { background: var(--inv-bg); color: var(--inv-ink); border-radius: var(--r); padding: clamp(56px, 9vw, 128px) 24px; text-align: center; }
+.contact h2 { font-size: clamp(56px, 10vw, 140px); }
+.contact h2 .gray { color: var(--inv-muted); }
+.contact p { margin: 26px auto 0; max-width: 480px; font-size: clamp(19px, 1.8vw, 22px); color: var(--inv-muted); }
+.contact .ctas { justify-content: center; }
+.contact .btn-solid { background: var(--inv-ink); color: var(--inv-bg); }
+.contact .btn-ghost { border-color: var(--inv-line); }
+.contact .btn-ghost:hover { border-color: var(--inv-ink); }
+
+footer { padding: 48px 0 56px; font-size: 16px; color: var(--muted); }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer .logo { font-size: 20px; color: var(--ink); }
+footer nav { display: flex; gap: 22px; }
+footer a:hover { color: var(--ink); }
+
+/* Einblenden */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .reveal { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
+</style>
+<script>
+  try { var t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#projekte">Zum Inhalt springen</a>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <div class="nav-card">
+      <div class="nav-bar">
+        <a class="logo" href="#top">theresa nagel.</a>
+        <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
+          Menü <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        </button>
+      </div>
+      <div class="menu" id="menu">
+        <div>
+          <nav aria-label="Hauptnavigation">
+            <a href="#projekte">Projekte</a>
+            <a href="#werkstatt">Werkstatt</a>
+            <a href="#ueber">Über mich</a>
+            <a href="#kontakt">Kontakt</a>
+          </nav>
+          <button class="theme" id="themeBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <span id="themeLabel">Dunkel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="wrap hero">
+    <p class="kicker reveal">Entwicklerin für Android &amp; Windows</p>
+    <h1 class="reveal">Apps für den <span class="gray">echten Alltag.</span></h1>
+    <p class="lead reveal"><b>Ich bin Theresa. Ich baue Apps, die Familie, Arbeit und Küche leiser machen.</b> Ohne Abo, ohne Werbung, mit Daten, die dir gehören.</p>
+
+    <div class="apps reveal">
+      <a class="app" href="#nestio"><img class="pad" src="assets/icons/nestio.png" alt="" width="52" height="52"><span>Nestio<small>Familien-App</small></span></a>
+      <a class="app" href="#zeitfuchs"><img src="assets/icons/zeitfuchs.svg" alt="" width="52" height="52"><span>Zeitfuchs<small>Zeiterfassung</small></span></a>
+      <a class="app" href="#leibgericht"><img src="assets/icons/leibgericht.png" alt="" width="52" height="52"><span>Leibgericht<small>Kochbuch &amp; Plan</small></span></a>
+      <a class="app" href="#releasebuilder"><img src="assets/icons/releasebuilder.png" alt="" width="52" height="52"><span>Release&shy;Builder<small>Auslieferungen</small></span></a>
+      <a class="app" href="#werkstatt"><img src="assets/icons/pieceful.svg" alt="" width="52" height="52"><span>Pieceful<small>Puzzle</small></span></a>
+      <a class="app" href="#werkstatt"><img src="assets/icons/immochronik.svg" alt="" width="52" height="52"><span>ImmoChronik<small>Archiv</small></span></a>
+    </div>
+  </section>
+
+  <div class="wrap blocks" id="projekte">
+    <!-- Nestio -->
+    <article class="block inv reveal" id="nestio" style="--c: var(--nestio)">
+      <div class="b-text">
+        <div class="b-meta"><img class="pad" src="assets/icons/nestio.png" alt="" width="40" height="40"><span class="live">Android · Live</span></div>
+        <h2>Nestio<span class="dot-c">.</span></h2>
+        <p class="b-lead">Die Familien-App, damit nicht mehr eine Person an alles denken muss.</p>
+        <p class="b-lead">Aufgaben mit Zuständigkeit, gemeinsame Einkaufsliste, Essensplan, Stundenplan, Kinderroutine und Verträge mit Kündigungsfristen. An einem Ort, für alle im Haushalt.</p>
+        <div class="ctas">
+          <a class="btn btn-solid" href="https://github.com/LinaLarsson42/nestio-releases/releases/latest/download/Nestio.apk">Für Android laden</a>
+          <a class="btn btn-ghost" href="https://github.com/LinaLarsson42/nestio-releases">Mehr erfahren</a>
+        </div>
+      </div>
+      <div class="b-visual">
+        <div class="phones">
+          <div class="phone"><img src="assets/nestio/lists.webp" alt="Gemeinsame Einkaufsliste nach Kategorien" loading="lazy" width="780" height="1594"></div>
+          <div class="phone"><img src="assets/nestio/home.webp" alt="Nestio-Startseite mit Wetter, Essen, Aufgaben und Einkaufsliste" loading="lazy" width="780" height="1594"></div>
+          <div class="phone"><img src="assets/nestio/meals.webp" alt="Essensplan für die Woche" loading="lazy" width="780" height="1594"></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Zeitfuchs -->
+    <article class="block flip reveal" id="zeitfuchs" style="--c: var(--zeitfuchs)">
+      <div class="b-text">
+        <div class="b-meta"><img src="assets/icons/zeitfuchs.svg" alt="" width="40" height="40"><span class="live">Windows · Live</span></div>
+        <h2>Zeitfuchs<span class="dot-c">.</span></h2>
+        <p class="b-lead">Die Zeiterfassung, die von selbst mitläuft.</p>
+        <p class="b-lead">PC an, Zeitfuchs läuft. Das aktuelle Projekt steht in der Taskleiste, ein Klick wechselt es. Kalender, Wochenübersicht, Überstundenkonto und CSV-Export für die Abrechnung.</p>
+        <div class="ctas">
+          <a class="btn btn-solid" href="https://github.com/LinaLarsson42/zeitfuchs-releases/releases/latest/download/Zeitfuchs-win-Setup.exe">Kostenlos laden</a>
+          <a class="btn btn-ghost" href="https://github.com/LinaLarsson42/zeitfuchs-releases">Mehr erfahren</a>
+        </div>
+      </div>
+      <div class="b-visual">
+        <img class="desk a" src="assets/zeitfuchs/dashboard.webp" alt="Zeitfuchs-Dashboard mit Zeitkonto, Todos und Budget-Tachos" loading="lazy" width="1600" height="964">
+        <img class="desk b" src="assets/zeitfuchs/widget_menu.webp" alt="Projektmenü des Taskleisten-Widgets" loading="lazy" width="510" height="340">
+      </div>
+    </article>
+
+    <!-- Leibgericht -->
+    <article class="block inv reveal" id="leibgericht" style="--c: var(--leib)">
+      <div class="b-text">
+        <div class="b-meta"><img src="assets/icons/leibgericht.png" alt="" width="40" height="40"><span class="live beta">Android · Testphase</span></div>
+        <h2>Leibgericht<span class="dot-c">.</span></h2>
+        <p class="b-lead">Alle deine Leibgerichte an einem Ort.</p>
+        <p class="b-lead">Screenshot rein, Rezept raus: Die Texterkennung läuft direkt auf dem Handy. Dazu Wochenplan, Einkaufsliste nach Supermarkt-Bereich und das ganze Kochbuch als PDF.</p>
+        <div class="ctas">
+          <a class="btn btn-solid" href="https://linalarsson42.github.io/leibgericht-website/">Zur Website</a>
+        </div>
+      </div>
+      <div class="b-visual">
+        <div class="phones">
+          <div class="phone"><img src="assets/leibgericht/kochbuch.webp" alt="Kochbuch-Übersicht" loading="lazy" width="600" height="1299"></div>
+          <div class="phone"><img src="assets/leibgericht/rezept.webp" alt="Rezept mit Portionen-Rechner" loading="lazy" width="600" height="1299"></div>
+          <div class="phone"><img src="assets/leibgericht/plan.webp" alt="Wochenplan" loading="lazy" width="600" height="1299"></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ReleaseBuilder -->
+    <article class="block flip reveal" id="releasebuilder" style="--c: var(--rb)">
+      <div class="b-text">
+        <div class="b-meta"><img src="assets/icons/releasebuilder.png" alt="" width="40" height="40"><span class="live">Windows · Live</span></div>
+        <h2>Release&shy;Builder<span class="dot-c">.</span></h2>
+        <p class="b-lead">Softwareauslieferungen ohne Handarbeit.</p>
+        <p class="b-lead">Ordner kopieren, JAR aus dem ZIP holen, Startskripte anpassen, alles packen. Einmal zusammenklicken, danach reicht ein Klick. Der Probelauf zeigt vorher, was passieren würde.</p>
+        <div class="ctas">
+          <a class="btn btn-solid" href="https://github.com/LinaLarsson42/releasebuilder-releases/releases">Download</a>
+        </div>
+      </div>
+      <div class="b-visual">
+        <div class="mock" aria-hidden="true">
+          <div class="mock-bar"><i></i><i></i><i></i><span>ReleaseBuilder – Standard-Release</span></div>
+          <div class="mock-body">
+            <div class="mock-side"><div class="on">Kundenportal</div><div>Backoffice</div><div>Import-Tool</div><div>+ Neues Projekt</div></div>
+            <div class="mock-main">
+              <div class="step"><b>1</b>Ordner kopieren<em>✓</em></div>
+              <div class="step"><b>2</b>Aus ZIP entpacken · MyApp*.jar<em>✓</em></div>
+              <div class="step"><b>3</b>Umbenennen · MyApp_${version}.bat<em>✓</em></div>
+              <div class="step"><b>4</b>Text ersetzen · ${prevVersion} → ${version}<em>2×</em></div>
+              <div class="step"><b>5</b>ZIP erstellen<em>✓</em></div>
+            </div>
+          </div>
+        </div>
+        <span class="mock-note">Platzhalter · Screenshot folgt</span>
+      </div>
+    </article>
+  </div>
+
+  <!-- Werkstatt -->
+  <section class="section" id="werkstatt">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <h2>In der <span class="gray">Werkstatt.</span></h2>
+        <p>Noch nicht fertig, aber schon in Benutzung.</p>
+      </div>
+      <div class="cards">
+        <article class="card reveal">
+          <img class="c-icon" src="assets/icons/pieceful.svg" alt="" width="64" height="64">
+          <h3>Pieceful<span class="gray">.</span></h3>
+          <p>Ein ruhiger Puzzle-Spieler: eigene Fotos hochladen, zuschneiden, in 20 bis 500 Teile zerlegen, drehen, einrasten lassen. Läuft offline im Browser und als Android-App.</p>
+          <div class="chips"><span class="chip">Web &amp; Android</span><span class="chip">React</span><span class="chip">PixiJS</span><span class="chip">Offline</span></div>
+        </article>
+        <article class="card reveal">
+          <img class="c-icon" src="assets/icons/immochronik.svg" alt="" width="64" height="64">
+          <h3>ImmoChronik<span class="gray">.</span></h3>
+          <p>Ein privates Archiv für den Immobilienmarkt vor Ort: Anzeigen bleiben mit Bildern und Zeitraum erhalten, auch wenn sie online längst verschwunden sind. Mit Karte, Volltextsuche und Preisstatistik.</p>
+          <div class="chips"><span class="chip">Self-hosted</span><span class="chip">Python</span><span class="chip">SQLite</span><span class="chip">Docker</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prinzipien -->
+  <section class="section">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <h2>Wie ich <span class="gray">baue.</span></h2>
+      </div>
+      <div class="cards three">
+        <div class="card small reveal" style="--c: var(--nestio)"><span class="n">01</span><h3>Deine Daten bleiben bei dir.</h3><p>Zeitfuchs und Leibgericht speichern alles lokal, ohne Konto. Wo eine Cloud nötig ist, wie bei Nestio, sieht nur dein Haushalt die Daten.</p></div>
+        <div class="card small reveal" style="--c: var(--zeitfuchs)"><span class="n">02</span><h3>Kein Abo, keine Werbung.</h3><p>Die Apps sind kostenlos und ohne künstliche Grenzen. Keine 20-Rezepte-Schranke, kein Premium-Knopf.</p></div>
+        <div class="card small reveal" style="--c: var(--leib)"><span class="n">03</span><h3>Fertig heißt: im Alltag benutzt.</h3><p>Jede App läuft zuerst bei mir und meiner Familie. Updates kommen automatisch, Feedback lese ich selbst.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Über mich -->
+  <section class="section" id="ueber">
+    <div class="wrap">
+      <div class="about reveal">
+        <!-- Platzhalter: eigenen Text einsetzen -->
+        <p class="big">Ich baue Apps für Probleme, die mich selbst nerven. <span>Vom ersten Entwurf über Design und Code bis zu Release, Website und Support – alles aus einer Hand.</span></p>
+        <div class="stack">
+          <div><b>Mobile</b><span>React Native, Expo, Capacitor</span></div>
+          <div><b>Desktop</b><span>C#, .NET, WPF</span></div>
+          <div><b>Backend</b><span>Supabase, Python, SQLite</span></div>
+          <div><b>Auslieferung</b><span>GitHub Releases, Velopack</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kontakt -->
+  <section class="section" id="kontakt">
+    <div class="wrap">
+      <div class="contact reveal">
+        <h2>Schreib <span class="gray">mir.</span></h2>
+        <p>Feedback zu einer App, eine Idee oder eine Frage – ich lese jede Nachricht.</p>
+        <div class="ctas">
+          <a class="btn btn-solid" href="mailto:linalarsson.dev@gmail.com">E-Mail schreiben</a>
+          <a class="btn btn-ghost" href="https://github.com/LinaLarsson42">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span><span class="logo">theresa nagel.</span> &nbsp;© <span id="year">2026</span></span>
+    <nav aria-label="Rechtliches"><a href="#">Impressum</a><a href="#">Datenschutz</a></nav>
+  </div>
+</footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  var nav = document.getElementById("nav"), menuBtn = document.getElementById("menuBtn");
+  function setMenu(open) { nav.classList.toggle("open", open); menuBtn.setAttribute("aria-expanded", open); }
+  menuBtn.addEventListener("click", function () { setMenu(!nav.classList.contains("open")); });
+  document.querySelectorAll("#menu nav a").forEach(function (a) { a.addEventListener("click", function () { setMenu(false); }); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+  document.addEventListener("click", function (e) { if (!nav.contains(e.target)) setMenu(false); });
+
+  var root = document.documentElement, label = document.getElementById("themeLabel");
+  function isDark() { return root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; }
+  function syncLabel() { label.textContent = isDark() ? "Hell" : "Dunkel"; }
+  syncLabel();
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    root.dataset.theme = isDark() ? "light" : "dark";
+    try { localStorage.setItem("theme", root.dataset.theme); } catch (e) {}
+    syncLabel();
+  });
+
+  var items = document.querySelectorAll(".reveal");
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -6% 0px" });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add("in"); });
+  }
+</script>
+</body>
+</html>
