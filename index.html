@@ -199,6 +199,8 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -.055em; line-height: .95; }
 .about { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: clamp(40px, 7vw, 100px); }
 .about p.big { font-size: clamp(28px, 3.8vw, 52px); line-height: 1.12; letter-spacing: -.04em; font-weight: 500; max-width: 24ch; }
 .about p.big span { color: var(--muted); }
+.about-text { margin-top: clamp(28px, 4vw, 48px); display: grid; gap: 18px; max-width: 62ch; }
+.about-text p { color: var(--ink2); font-size: clamp(18px, 1.6vw, 20px); line-height: 1.6; }
 .stack { margin-top: clamp(40px, 5vw, 64px); display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; border-top: 1px solid var(--line); padding-top: 28px; }
 .stack b { display: block; font-weight: 500; }
 .stack span { color: var(--muted); font-size: 16px; }
@@ -411,8 +413,12 @@ footer a:hover { color: var(--ink); }
   <section class="section" id="ueber">
     <div class="wrap">
       <div class="about reveal">
-        <!-- Platzhalter: eigenen Text einsetzen -->
-        <p class="big">Ich baue Apps für Probleme, die mich selbst nerven. <span>Vom ersten Entwurf über Design und Code bis zu Release, Website und Support – alles aus einer Hand.</span></p>
+        <p class="big">Ich bin Theresa, Softwareentwicklerin. <span>Seit rund neun Jahren baue ich beruflich Desktop-Software für die Fahrzeugdiagnose in der Automobilbranche, in Java, C++ und C#.</span></p>
+        <div class="about-text">
+          <p>Angefangen habe ich woanders: mit einer Ausbildung im Archiv- und Informationswesen, danach kam das Studium der Medizinisch-Technischen Informatik. Aus beidem ist mir eine Vorliebe geblieben: Informationen so ordnen, dass man sie wiederfindet, und so aufbewahren, dass sie nicht verloren gehen.</p>
+          <p>Meine eigenen Apps entstehen nebenher, im Alltag mit Teilzeitjob und zwei kleinen Kindern. Von dort kommen auch die Ideen. Nestio, weil zu viel im Kopf einer einzigen Person hängt. Zeitfuchs, weil Zeiten nachtragen niemand gern macht. ReleaseBuilder, weil dieselben zehn Handgriffe bei jeder Auslieferung nerven.</p>
+          <p>Ich fange lieber an, als lange zu planen, und baue weiter, bis etwas im Alltag trägt. Vom ersten Entwurf über Design und Code bis zu Release, Website und Support: alles aus einer Hand.</p>
+        </div>
         <div class="stack">
           <div><b>Mobile</b><span>React Native, Expo, Capacitor</span></div>
           <div><b>Desktop</b><span>C#, .NET, WPF</span></div>
