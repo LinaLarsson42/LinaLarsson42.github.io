@@ -144,29 +144,11 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -.055em; line-height: .95; }
 .block:hover .desk.a { transform: translateX(-14px); }
 .block:hover .desk.b { transform: translateY(-10px) scale(1.03); }
 
-/* ReleaseBuilder-Platzhalter: gezeichnetes Fenster */
-.mock { position: absolute; left: 10%; right: -10%; top: 72px; bottom: -12px; border-radius: 14px 0 0 0; background: var(--surface); color: var(--ink);
-  border: 1px solid var(--line); box-shadow: 0 40px 80px -24px rgba(0,0,0,.4); overflow: hidden; display: flex; flex-direction: column; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
-.block:hover .mock { transform: translateX(-14px); }
-.mock-bar { height: 40px; flex: none; display: flex; align-items: center; gap: 7px; padding: 0 16px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
-.mock-bar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
-.mock-bar span { margin-left: 10px; }
-.mock-body { flex: 1; display: grid; grid-template-columns: 32% 1fr; min-height: 0; }
-.mock-side { border-right: 1px solid var(--line); padding: 14px; display: grid; gap: 8px; align-content: start; }
-.mock-side div { height: 34px; border-radius: 10px; background: var(--bg); font-size: 13px; display: flex; align-items: center; padding: 0 12px; color: var(--muted); white-space: nowrap; overflow: hidden; }
-.mock-side div.on { background: color-mix(in srgb, var(--c) 15%, transparent); color: var(--c); font-weight: 600; }
-.mock-main { padding: 14px; display: grid; gap: 8px; align-content: start; }
-.step { display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); font-size: 14px; color: var(--ink2); white-space: nowrap; overflow: hidden; }
-.step b { width: 24px; height: 24px; flex: none; border-radius: 7px; display: grid; place-items: center; font-size: 12px; background: color-mix(in srgb, var(--c) 15%, transparent); color: var(--c); }
-.step em { margin-left: auto; padding-left: 10px; font-style: normal; font-size: 13px; color: #2FB36B; }
-.mock-note { position: absolute; left: 16px; bottom: 16px; z-index: 2; font-size: 13px; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); padding: 6px 12px; border-radius: 999px; }
-
 @media (max-width: 900px) {
   .block { grid-template-columns: 1fr; min-height: 0; }
   .block.flip .b-text { order: 0; }
   .b-visual { min-height: 440px; }
   .desk.a { width: 120%; left: 8%; top: 48px; }
-  .mock { top: 48px; }
 }
 @media (max-width: 480px) {
   :root { --r: 30px; }
@@ -353,20 +335,8 @@ footer a:hover { color: var(--ink); }
         </div>
       </div>
       <div class="b-visual">
-        <div class="mock" aria-hidden="true">
-          <div class="mock-bar"><i></i><i></i><i></i><span>ReleaseBuilder – Standard-Release</span></div>
-          <div class="mock-body">
-            <div class="mock-side"><div class="on">Kundenportal</div><div>Backoffice</div><div>Import-Tool</div><div>+ Neues Projekt</div></div>
-            <div class="mock-main">
-              <div class="step"><b>1</b>Ordner kopieren<em>✓</em></div>
-              <div class="step"><b>2</b>Aus ZIP entpacken · MyApp*.jar<em>✓</em></div>
-              <div class="step"><b>3</b>Umbenennen · MyApp_${version}.bat<em>✓</em></div>
-              <div class="step"><b>4</b>Text ersetzen · ${prevVersion} → ${version}<em>2×</em></div>
-              <div class="step"><b>5</b>ZIP erstellen<em>✓</em></div>
-            </div>
-          </div>
-        </div>
-        <span class="mock-note">Platzhalter · Screenshot folgt</span>
+        <img class="desk a" src="assets/releasebuilder/main.webp" alt="ReleaseBuilder mit Projektliste, Schrittfolge eines Release und Versionsanzeige" loading="lazy" width="1426" height="893">
+        <img class="desk b" src="assets/releasebuilder/dryrun.webp" alt="Probelauf mit Protokoll und Meldung &quot;Probelauf erfolgreich&quot;" loading="lazy" width="1426" height="893">
       </div>
     </article>
   </div>
