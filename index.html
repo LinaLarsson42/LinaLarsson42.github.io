@@ -80,7 +80,7 @@ h1, h2, h3 { font-weight: 600; letter-spacing: -.055em; line-height: .95; }
 .menu .theme svg { width: 16px; height: 16px; }
 
 /* Hero */
-.hero { padding: 200px 0 64px; text-align: center; }
+.hero { padding: 120px 0 64px; text-align: center; }
 .hero .kicker { font-size: 18px; color: var(--ink2); }
 .hero h1 { margin: 26px auto 0; font-size: clamp(56px, 10.5vw, 148px); max-width: 11ch; }
 .hero .lead { margin: 34px auto 0; max-width: 640px; font-size: clamp(20px, 2.2vw, 26px); line-height: 1.45; color: var(--muted); font-weight: 400; }
@@ -214,6 +214,49 @@ footer a:hover { color: var(--ink); }
 .vid-close { position: absolute; top: 10px; right: 10px; z-index: 2; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(0,0,0,.55); color: #fff; font-size: 26px; line-height: 1; cursor: pointer; }
 .vid-close:hover { background: rgba(0,0,0,.8); }
 
+
+/* Intro: Tippen, Namens-Reveal, rotierender Satz */
+.intro { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 0 80px; position: relative; cursor: default; }
+.mono { font-family: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace; letter-spacing: 0; }
+.typed { height: 1.6em; font-size: clamp(18px, 3vw, 28px); color: var(--muted); white-space: pre; }
+.caret { display: inline-block; width: 2px; height: 1.1em; background: var(--ink); vertical-align: -.18em; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.intro-name { font-size: clamp(60px, 13vw, 190px); font-weight: 600; letter-spacing: -.06em; line-height: .95; }
+.intro-name .l { display: inline-block; }
+.intro-name .dot { color: var(--c, var(--nestio)); transition: color .4s; }
+.intro.play .intro-name .l { opacity: 0; transform: translateY(.5em) scale(.9); animation: pop .7s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i) * 55ms); }
+@keyframes pop { to { opacity: 1; transform: none; } }
+.intro-role { margin-top: 18px; font-size: 14px; padding: 6px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--ink2); }
+.say { margin-top: clamp(56px, 9vh, 110px); display: grid; grid-template-columns: auto auto; align-items: center; gap: clamp(24px, 5vw, 72px); text-align: left; }
+.say h2 { font-size: clamp(30px, 4.6vw, 60px); line-height: 1.02; max-width: 12ch; }
+.word-wrap { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .12em; margin-bottom: -.12em; }
+.word { display: inline-block; color: var(--c, var(--ink)); transition: transform .4s cubic-bezier(.5,0,.2,1), opacity .3s; }
+.word.out { transform: translateY(-110%); opacity: 0; }
+.word.pre { transform: translateY(110%); opacity: 0; transition: none; }
+.say-card { width: clamp(120px, 14vw, 180px); aspect-ratio: 1; border-radius: 34px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; place-items: center; position: relative;
+  background-image: radial-gradient(90% 90% at 50% 110%, color-mix(in srgb, var(--c, var(--ink)) 28%, transparent), transparent 70%); transition: background-image .4s; }
+.say-card img { width: 56%; height: 56%; object-fit: contain; border-radius: 18px; transition: transform .45s cubic-bezier(.3,1.5,.5,1), opacity .25s; }
+.say-card img.swap { transform: scale(.5) rotate(-12deg); opacity: 0; }
+.say-code { grid-column: 1 / -1; margin-top: 4px; font-size: 13px; color: var(--muted); min-height: 1.4em; }
+.scroll-hint { position: absolute; bottom: 28px; left: 50%; translate: -50% 0; font-size: 13px; color: var(--muted); animation: bob 2s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(6px); } }
+@media (max-width: 640px) { .say { grid-template-columns: 1fr; justify-items: center; text-align: center; } .say h2 { max-width: none; } }
+
+/* Scroll-Bühne: Chaos wird zu Raster */
+.chaos { height: 280vh; position: relative; margin-top: 40px; }
+.chaos-stick { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.chaos canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.chaos-msg { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; padding: 0 16px; }
+.chaos-msg > div { grid-area: 1 / 1; transition: opacity .5s, transform .6s cubic-bezier(.2,.7,.2,1), filter .5s; }
+.chaos-msg h2 { font-size: clamp(40px, 8vw, 112px); display: inline-block; padding: .08em .3em .14em; border-radius: 28px; background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.chaos[data-state="clear"] .m-complex, .chaos:not([data-state="clear"]) .m-clear { opacity: 0; transform: translateY(24px) scale(.97); filter: blur(10px); }
+.stats { margin-top: 28px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.stat { background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 24px; padding: 18px 26px; min-width: 150px; }
+.stat b { display: block; font-size: clamp(36px, 5vw, 56px); font-weight: 600; letter-spacing: -.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; color: var(--muted); }
+@media (max-width: 480px) { .stat { min-width: 0; flex: 1 1 40%; padding: 14px 16px; } }
+@media (prefers-reduced-motion: reduce) { .chaos { height: auto; } .chaos-stick { position: relative; height: 100svh; } .caret, .scroll-hint { animation: none; } }
+
 /* Einblenden */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
 .reveal.in { opacity: 1; transform: none; }
@@ -258,6 +301,38 @@ footer a:hover { color: var(--ink); }
 </header>
 
 <main id="top">
+  <!-- Intro -->
+  <section class="wrap intro" id="intro" aria-label="Begrüßung">
+    <p class="typed mono" id="typed" aria-hidden="true"></p>
+    <p class="intro-name" id="introName" aria-label="Ich bin Theresa."><span aria-hidden="true">Ich bin Theresa<span class="dot">.</span></span></p>
+    <p class="intro-role mono">Entwicklerin · Android &amp; Windows</p>
+    <div class="say">
+      <h2>Ich baue Dinge, die beim <span class="word-wrap"><span class="word" id="word">Planen, Kochen und Zeiterfassen</span></span> helfen.</h2>
+      <div class="say-card" id="sayCard" aria-hidden="true"><img id="sayImg" src="assets/icons/nestio.png" alt="" width="100" height="100"></div>
+      <p class="say-code mono" id="sayCode" aria-hidden="true"></p>
+    </div>
+    <span class="scroll-hint mono" aria-hidden="true">scrollen ↓</span>
+  </section>
+
+  <!-- Chaos wird Klarheit -->
+  <section class="chaos" id="chaos" aria-label="Chaos wird Klarheit">
+    <div class="chaos-stick">
+      <canvas id="cv" aria-hidden="true"></canvas>
+      <div class="chaos-msg">
+        <div class="m-complex"><h2>Auch wenn der Alltag <span class="gray">kompliziert ist …</span></h2></div>
+        <div class="m-clear">
+          <h2>… mach ich es <span class="gray">klar.</span></h2>
+          <div class="stats">
+            <div class="stat"><b data-to="9">9</b><span>Jahre Berufserfahrung</span></div>
+            <div class="stat"><b data-to="6">6</b><span>Apps und Werkzeuge</span></div>
+            <div class="stat"><b data-to="0">0</b><span>Abos</span></div>
+            <div class="stat"><b data-to="0">0</b><span>Werbebanner</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap hero">
     <p class="kicker reveal">Entwicklerin für Android &amp; Windows</p>
     <h1 class="reveal">Apps für den <span class="gray">echten Alltag.</span></h1>
@@ -483,6 +558,135 @@ footer a:hover { color: var(--ink); }
   document.getElementById("vidClose").addEventListener("click", closeVideo);
   vid.addEventListener("click", function (e) { if (e.target === vid) closeVideo(); });
   vid.addEventListener("close", function () { player.pause(); player.removeAttribute("src"); player.load(); });
+</script>
+<script>
+/* Intro, rotierender Satz, Chaos-Raster. Alles ohne Bibliothek; bei "reduzierte Bewegung" bleibt der fertige Zustand stehen. */
+(function () {
+  var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  var intro = $("intro"), typed = $("typed"), nameEl = $("introName"), word = $("word"), card = $("sayCard"), img = $("sayImg"), code = $("sayCode");
+  var topics = [
+    { w: "Planen", c: "var(--nestio)", i: "assets/icons/nestio.png", t: "/* nestio · android · familie */" },
+    { w: "Zeiterfassen", c: "var(--zeitfuchs)", i: "assets/icons/zeitfuchs.svg", t: "/* zeitfuchs · windows · taskleiste */" },
+    { w: "Kochen", c: "var(--leib)", i: "assets/icons/leibgericht.png", t: "/* leibgericht · android · kochbuch */" },
+    { w: "Ausliefern", c: "var(--rb)", i: "assets/icons/releasebuilder.png", t: "/* releasebuilder · windows · probelauf */" },
+    { w: "Puzzeln", c: "var(--piece)", i: "assets/icons/pieceful.svg", t: "/* pieceful · web & android · offline */" },
+    { w: "Archivieren", c: "var(--immo)", i: "assets/icons/immochronik.svg", t: "/* immochronik · self-hosted · sqlite */" }
+  ];
+  var seen = false; try { seen = sessionStorage.getItem("introSeen") === "1"; } catch (e) {}
+  var skip = false, timers = [], visible = true, rot = 0;
+  function later(fn, ms) { var t = setTimeout(fn, ms); timers.push(t); return t; }
+
+  // Namen in Buchstaben zerlegen (Text bleibt für Screenreader am Absatz)
+  var label = "Ich bin Theresa";
+  function buildName() {
+    var h = ""; for (var k = 0; k < label.length; k++) h += label[k] === " " ? " " : '<span class="l" style="--i:' + k + '">' + label[k] + "</span>";
+    nameEl.innerHTML = '<span aria-hidden="true">' + h + '<span class="l dot" style="--i:' + label.length + '">.</span></span>';
+  }
+  function setTopic(n, animate) {
+    var t = topics[n % topics.length];
+    function apply() { intro.style.setProperty("--c", t.c); intro.querySelector(".say").style.setProperty("--c", t.c); word.textContent = t.w; img.src = t.i; code.textContent = t.t; card.style.setProperty("--c", t.c); }
+    if (!animate) { apply(); return; }
+    word.classList.add("out"); img.classList.add("swap");
+    later(function () { apply(); word.classList.remove("out"); word.classList.add("pre"); void word.offsetWidth; word.classList.remove("pre"); img.classList.remove("swap"); }, 380);
+  }
+  function startRotation() {
+    (function tick() { later(function () { if (visible && !document.hidden) { rot++; setTopic(rot, true); } tick(); }, 2300); })();
+  }
+  function type(text, done) {
+    var i = 0; typed.innerHTML = '<span id="tt"></span><span class="caret"></span>';
+    (function step() { if (skip) return done(); i++; $("tt").textContent = text.slice(0, i); if (i < text.length) later(step, 55 + Math.random() * 45); else later(done, 500); })();
+  }
+  function run() {
+    if (still) { return; }
+    nameEl.style.visibility = "hidden"; setTopic(0, false);
+    if (seen) { buildName(); nameEl.style.visibility = ""; intro.classList.add("play"); startRotation(); return; }
+    type("/* Hallo Welt */", function () {
+      typed.innerHTML = '<span>/* Hallo Welt */</span>'; typed.style.transition = "opacity .5s"; typed.style.opacity = ".35";
+      buildName(); nameEl.style.visibility = ""; intro.classList.add("play");
+      later(startRotation, 900);
+      try { sessionStorage.setItem("introSeen", "1"); } catch (e) {}
+    });
+  }
+  intro.addEventListener("click", function () { skip = true; });
+  if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(intro);
+  run();
+
+  // ── Chaos wird Raster ──
+  var sec = $("chaos"), cv = $("cv"), ctx = cv.getContext("2d");
+  if (!ctx) return;
+  var W = 0, H = 0, dpr = 1, cell = 80, cols = 0, rows = 0, shapes = [], inView = false, raf = 0, counted = false, clearNow = false;
+  var rnd = function (a, b) { return a + Math.random() * (b - a); };
+  function build() {
+    var r = cv.getBoundingClientRect(); W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = W * dpr; cv.height = H * dpr;
+    cell = Math.max(64, W / 14); cols = Math.ceil(W / cell); rows = Math.ceil(H / cell);
+    var gx = (W - cols * cell) / 2, gy = (H - rows * cell) / 2, n = cols * rows;
+    var vars = ["--nestio", "--zeitfuchs", "--leib", "--rb", "--piece", "--immo"];
+    shapes = [];
+    for (var k = 0; k < n; k++) {
+      var c = k % cols, rr = Math.floor(k / cols);
+      shapes.push({
+        gx: gx + c * cell + cell / 2, gy: gy + rr * cell + cell / 2,
+        ax: rnd(0, W), ay: rnd(0, H), rx: rnd(20, 90), ry: rnd(20, 90), sp: rnd(.2, .7), ph: rnd(0, 6.28),
+        s: rnd(.4, 1.1) * cell * .8, rot: rnd(-3, 3), kind: Math.random() < .3 ? 1 : 0,
+        col: Math.random() < .22 ? "ink" : Math.random() < .28 ? "gray" : vars[(Math.random() * vars.length) | 0],
+        accent: Math.random() < .05
+      });
+    }
+  }
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#888"; }
+  function ease(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+  function draw(now) {
+    var rect = sec.getBoundingClientRect(), total = rect.height - innerHeight;
+    var p = still ? 1 : Math.max(0, Math.min(1, -rect.top / Math.max(1, total)));
+    var t = ease((p - .28) / .34), time = still ? 0 : now / 1000;
+    var line = css("--line"), ink = css("--ink"), muted = css("--muted"), surf = css("--surface");
+    var cols2 = {}; ["--nestio", "--zeitfuchs", "--leib", "--rb", "--piece", "--immo"].forEach(function (v) { cols2[v] = css(v); });
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    for (var k = 0; k < shapes.length; k++) {
+      var o = shapes[k];
+      var cx = o.ax + Math.sin(time * o.sp + o.ph) * o.rx, cy = o.ay + Math.cos(time * o.sp * .8 + o.ph) * o.ry;
+      var x = cx + (o.gx - cx) * t, y = cy + (o.gy - cy) * t;
+      var size = o.s + (cell * .86 - o.s) * t, ang = o.rot * (time * .3 + 1) * (1 - t);
+      var fill = o.col === "ink" ? ink : o.col === "gray" ? muted : cols2[o.col];
+      var calm = t > .98;
+      var alpha = calm ? (o.accent ? 1 : .55) : .9;
+      // Bewegungsunschärfe: Geisterbilder während des Übergangs
+      var ghosts = (t > .02 && t < .98) ? 3 : 0;
+      for (var g = ghosts; g >= 0; g--) {
+        var gt = Math.max(0, t - g * .035), gxp = cx + (o.gx - cx) * gt, gyp = cy + (o.gy - cy) * gt;
+        ctx.save(); ctx.translate(gxp, gyp); ctx.rotate(ang);
+        ctx.globalAlpha = g ? .16 : alpha;
+        if (calm && !o.accent) { ctx.fillStyle = line; } else ctx.fillStyle = fill;
+        if (t > .02 && !o.accent && o.col !== "ink" && o.col !== "gray" && t > .6) ctx.fillStyle = line;
+        var sz = size;
+        if (o.kind && t < .5) { ctx.beginPath(); ctx.arc(0, 0, sz / 2, 0, 6.283); ctx.fill(); }
+        else { rr(-sz / 2, -sz / 2, sz, sz, sz * (.28 - .08 * t)); ctx.fill(); }
+        ctx.restore();
+      }
+    }
+    ctx.globalAlpha = 1;
+    var state = p > .5 ? "clear" : "";
+    if (state === "clear" !== clearNow) { clearNow = state === "clear"; if (clearNow) sec.setAttribute("data-state", "clear"); else sec.removeAttribute("data-state"); }
+    if (clearNow && !counted) { counted = true; countUp(); }
+  }
+  function countUp() {
+    sec.querySelectorAll("[data-to]").forEach(function (b) {
+      var to = +b.dataset.to; if (still || !to) { b.textContent = to; return; }
+      var t0 = performance.now(); b.textContent = "0";
+      (function f(n) { var q = Math.min(1, (n - t0) / 1100); b.textContent = Math.round(to * (1 - Math.pow(1 - q, 3))); if (q < 1) requestAnimationFrame(f); })(t0);
+    });
+  }
+  function loop(now) { if (!inView) { raf = 0; return; } draw(now); raf = requestAnimationFrame(loop); }
+  function resize() { build(); draw(performance.now()); }
+  addEventListener("resize", function () { clearTimeout(resize.t); resize.t = setTimeout(resize, 150); });
+  new MutationObserver(function () { draw(performance.now()); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  build(); draw(0);
+  if (still) { sec.setAttribute("data-state", "clear"); countUp(); return; }
+  new IntersectionObserver(function (e) { inView = e[0].isIntersecting; if (inView && !raf) raf = requestAnimationFrame(loop); }, { rootMargin: "100px" }).observe(sec);
+})();
 </script>
 </body>
 </html>
